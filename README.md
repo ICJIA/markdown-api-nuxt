@@ -1,10 +1,10 @@
-# markdown-api-nuxt
+# Markdown-to-API Frontend
 
-> Nuxt.js project
+Bare bones Nuxt front-end for [Markdown-to-API](https://github.com/ICJIA/markdown-to-api)
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 $ npm install # Or yarn install
 

@@ -1,7 +1,10 @@
 <template>
     <div>
 
-        {{taggedPosts}}
+        <h1>Posts tagged with: '{{$route.params.tag}}'</h1>
+        <div v-for="post in taggedPosts" class="list">
+            <nuxt-link class="card" :key="post.slug" :to="'/posts/'+post.slug">{{post.attrs.title}}</nuxt-link>
+        </div>
 
 
 
@@ -34,4 +37,7 @@
 </script>
 
 <style>
+    .list {
+        margin-top: 30px;
+    }
 </style>

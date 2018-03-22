@@ -4,8 +4,11 @@
         <h1 class="title">
             {{post.attrs.title}}
         </h1>
-
-        <div class="content" v-html="post.body"></div>
+        <h3>Tags:</h3>
+        <div v-for="tag in post.attrs.tags">
+            <nuxt-link class="card" :key="tag" :to="'/tags/'+tag">{{tag}}</nuxt-link>
+        </div>
+        <div class="content" v-html="post.body" style="margin-top: 15px"></div>
 
     </div>
 </template>
@@ -32,4 +35,7 @@
 </script>
 
 <style>
+    .box {
+        border: 1px solid #ccc;
+    }
 </style>
