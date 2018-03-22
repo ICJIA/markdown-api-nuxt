@@ -1,7 +1,11 @@
 <template>
   <div>
     <div style="background: #ccc; margin-bottom: 15px;">
-      <nuxt-link to="/">Home</nuxt-link>
+      <nuxt-link to="/">Home</nuxt-link>&nbsp;|&nbsp;
+      <nuxt-link to="/posts">Posts</nuxt-link>&nbsp;|&nbsp;
+      <nuxt-link to="/categories">Categories</nuxt-link>&nbsp;|&nbsp;
+      <nuxt-link to="/tags">Tags</nuxt-link>&nbsp;|&nbsp;
+
     </div>
     <nuxt/>
   </div>

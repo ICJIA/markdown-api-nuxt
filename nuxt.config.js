@@ -16,36 +16,43 @@ module.exports = {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
   generate: {
-    // routes: function() {
-    //   return axios.get("http://localhost:4000/posts").then(res => {
-    //     return _.map(res.data, function(post, key) {
-    //       return `/posts/${post.slug}`;
-    //     });
-    //   });
-    // }
-
     routes: function(callback) {
       axios
+        // get post routes
         .get("http://localhost:4000/posts")
         .then(res => {
           let postRoutes = res.data.map(post => {
             return `/posts/${post.slug}`;
           });
-          let tagArray = [];
-          let tagRoutes = res.data.map(post => {
+          // Get tag routes
+          let tagRoutes = [];
+          res.data.map(post => {
             if (post.attrs.tags) {
               post.attrs.tags.map(tag => {
-                tagArray.push(`/tags/${tag}`);
+                tagRoutes.push(`/tags/${tag}`);
               });
             }
           });
-          // Remove dupes
-          tagArray = tagArray.reduce(
+          // Remove dupe tags
+          tagRoutes = tagRoutes.reduce(
             (x, y) => (x.includes(y) ? x : [...x, y]),
             []
           );
 
-          routes = [...postRoutes, ...tagArray];
+          let categoryRoutes = [];
+          res.data.map(post => {
+            if (post.attrs.category) {
+              categoryRoutes.push(`/category/${post.attrs.category}`);
+            }
+          });
+
+          categoryRoutes = categoryRoutes.reduce(
+            (x, y) => (x.includes(y) ? x : [...x, y]),
+            []
+          );
+
+          // merge all routes
+          routes = [...postRoutes, ...tagRoutes, ...categoryRoutes];
           callback(null, routes);
         })
         .catch(callback);

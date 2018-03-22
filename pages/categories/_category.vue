@@ -1,8 +1,8 @@
 <template>
     <div>
 
-        <h1 class="list">Posts tagged with: '{{$route.params.tag}}'</h1>
-        <div v-for="post in taggedPosts">
+        <h1 class="list">Posts categorized as: '{{$route.params.category}}'</h1>
+        <div v-for="post in categorizedPosts">
             <nuxt-link class="card" :key="post.slug" :to="'/posts/'+post.slug">{{post.attrs.title}}</nuxt-link>
         </div>
 
@@ -25,12 +25,12 @@
 
         },
         fetch({ store, params }) {
-            store.dispatch('getTaggedPosts', params.tag)
+            store.dispatch('getCategorizedPosts', params.category)
 
         },
         computed: {
-            taggedPosts() {
-                return this.$store.state.taggedPosts
+            categorizedPosts() {
+                return this.$store.state.categorizedPosts
             }
         }
     }

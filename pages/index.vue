@@ -13,6 +13,10 @@
     <div v-for="tag in Tags">
       <nuxt-link class="card" :key="tag" :to="'/tags/'+tag">{{tag}}</nuxt-link>
     </div>
+    <h1>Categories</h1>
+    <div v-for="category in Categories">
+      <nuxt-link class="card" :key="category" :to="'/categories/'+category">{{category}}</nuxt-link>
+    </div>
   </div>
 </template>
 
@@ -40,6 +44,9 @@
       },
       Tags() {
         return this.$store.state.tags
+      },
+      Categories() {
+        return this.$store.state.categories
       }
     }
   }
