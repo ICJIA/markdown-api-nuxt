@@ -35,7 +35,7 @@ module.exports = {
     routes: function(callback) {
       axios
         // get post routes
-        .get("http://localhost:4000/posts")
+        .get("https://markdown-api.now.sh/posts")
         .then(res => {
           let postRoutes = res.data.map(post => {
             return `/posts/${post.slug}`;

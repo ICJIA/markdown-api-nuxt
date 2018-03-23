@@ -1,0 +1,8 @@
+{
+  "name": "markdown-api-front",
+  "alias": "markdown-api-front",
+  "type": "npm",
+  "engines": {
+    "node": "8.10.0"
+  }
+}
