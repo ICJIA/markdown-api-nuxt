@@ -22,7 +22,9 @@ const createStore = () => {
       tags: [],
       taggedPosts: [],
       categories: [],
-      categorizedPosts: []
+      categorizedPosts: [],
+      postsByCategory: [],
+      postsByTag: []
     },
 
     mutations: {
@@ -32,36 +34,38 @@ const createStore = () => {
       setPosts: (state, posts) => {
         state.posts = posts;
       },
-      setFeaturedPosts: (state, featured) => {
-        state.featured = featured;
-      },
-      setNewsPosts: (state, news) => {
-        state.news = news;
-      },
+
       setCurrentPost: (state, post) => {
         state.post = post;
-      },
-      setTags: (state, tags) => {
-        state.tags = tags;
       },
       setCategories: (state, categories) => {
         state.categories = categories;
       },
-      setTaggedPosts: (state, taggedPosts) => {
-        state.taggedPosts = taggedPosts;
+      setPostsByCategory: (state, postsByCategory) => {
+        state.postsByCategory = postsByCategory;
       },
       setCategorizedPosts: (state, categorizedPosts) => {
         state.categorizedPosts = categorizedPosts;
+      },
+      setTags: (state, tags) => {
+        state.tags = tags;
+      },
+      setTaggedPosts: (state, taggedPosts) => {
+        state.taggedPosts = taggedPosts;
+      },
+      setPostsByTag: (state, postsByTag) => {
+        state.postsByTag = postsByTag;
       }
     },
     actions: {
       async getPosts({ commit, dispatch }) {
         let { data } = await axios.get(`posts`);
         commit("setPosts", data);
-        dispatch("getFeaturedPosts");
-        dispatch("getNewsPosts");
+
         dispatch("getTags");
         dispatch("getCategories");
+        dispatch("getPostsByCategory");
+        dispatch("getPostsByTag");
       },
       async getPost({ commit, store }, slug) {
         let { data } = await axios.get(`posts/${slug}`);
@@ -92,23 +96,6 @@ const createStore = () => {
         commit("setCategorizedPosts", categoryArray);
       },
 
-      getFeaturedPosts({ commit }) {
-        let featured = this.state.posts.filter(post => {
-          if (post.attrs.category === "Featured") {
-            return post;
-          }
-        });
-        commit("setFeaturedPosts", featured);
-      },
-      getNewsPosts({ commit }) {
-        let news = this.state.posts.filter(post => {
-          if (post.attrs.category === "News") {
-            return post;
-          }
-        });
-        commit("setNewsPosts", news);
-      },
-
       getTags({ commit }) {
         let tags = [];
         this.state.posts.map(function(post) {
@@ -120,6 +107,11 @@ const createStore = () => {
         });
         tags = tags.reduce((x, y) => (x.includes(y) ? x : [...x, y]), []);
         commit("setTags", tags);
+      },
+      getPostsByTag({ commit }) {
+        let tagArray = [];
+        let tmpObj = {};
+        commit("setPostsByTag", tmpObj);
       },
       getCategories({ commit }) {
         let categories = [];
@@ -134,16 +126,64 @@ const createStore = () => {
         );
         commit("setCategories", categories);
       },
+      getPostsByCategory({ commit }) {
+        let categoryArray = [];
+        let tmpObj = {};
+        this.state.categories.map(category => {
+          tmpObj[category] = [];
+          this.state.posts.map(post => {
+            if (post.attrs.category) {
+              if (category === post.attrs.category) {
+                let postObj = {};
+                let attrs = {};
+                attrs.title = post.attrs.title;
+                attrs.created = post.attrs.created;
+                attrs.updated = post.attrs.updated;
+                postObj.slug = post.slug;
+                postObj.attrs = attrs;
+                tmpObj[category].push(postObj);
+              }
+            }
+          });
+        });
+        commit("setPostsByCategory", tmpObj);
+      },
+      getPostsByTag({ commit }) {
+        let tagArray = [];
+        let tmpObj = {};
+        this.state.tags.map(tag => {
+          tmpObj[tag] = [];
+          this.state.posts.map(post => {
+            if (post.attrs.tags) {
+              post.attrs.tags.map(targetTag => {
+                if (tag === targetTag) {
+                  let postObj = {};
+                  let attrs = {};
+                  attrs.title = post.attrs.title;
+                  attrs.created = post.attrs.created;
+                  attrs.updated = post.attrs.updated;
+                  postObj.slug = post.slug;
+                  postObj.attrs = attrs;
+                  tmpObj[tag].push(postObj);
+                }
+              });
+            }
+          });
+        });
+
+        commit("setPostsByTag", tmpObj);
+      },
+
+      // Load from server
 
       async nuxtServerInit({ commit, dispatch }, { store, route, params }) {
         if (process.server) {
-          let res;
-          res = await axios.get("posts");
-          commit("setPosts", res.data);
-          dispatch("getFeaturedPosts");
-          dispatch("getNewsPosts");
+          let { data } = await axios.get("posts");
+          commit("setPosts", data);
           dispatch("getTags");
           dispatch("getCategories");
+          dispatch("getPostsByCategory");
+          dispatch("getPostsByTag");
         }
         if (process.server && params.slug) {
           let { data } = await axios.get(`posts/${params.slug}`);

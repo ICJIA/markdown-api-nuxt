@@ -15,7 +15,9 @@
   "dependencies": {
     "axios": "^0.18.0",
     "lodash": "^4.17.5",
-    "nuxt": "^1.4.0"
+    "nuxt": "^1.4.0",
+    "nuxt-vuex-router-sync": "^0.0.2",
+    "vue-router-sync": "^0.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",

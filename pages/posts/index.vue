@@ -1,12 +1,12 @@
 <template>
     <div>
 
-        <display-content/>
+        <display-all-posts/>
     </div>
 </template>
 
 <script>
-    import DisplayContent from '~/components/DisplayContent'
+    import DisplayAllPosts from '~/components/DisplayAllPosts'
     export default {
         name: "Posts",
         mounted() {
@@ -14,7 +14,7 @@
         },
 
         components: {
-            DisplayContent
+            DisplayAllPosts
         }
     }
 </script>

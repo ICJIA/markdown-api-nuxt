@@ -1,19 +1,23 @@
 <template>
   <div>
 
-    <h1>Featured</h1>
-    <div v-for="post in Featured">
-      <nuxt-link class="card" :key="post.slug" :to="'/posts/'+post.slug">{{post.attrs.title}}</nuxt-link>
-    </div>
-    <h1>News</h1>
-    <div v-for="post in News">
-      <nuxt-link class="card" :key="post.slug" :to="'/posts/'+post.slug">{{post.attrs.title}}</nuxt-link>
-    </div>
-    <h1>Tags</h1>
+    <h1>All Posts:</h1>
+    <display-all-posts />
+    <h1>Posts By Category:</h1>
+    <display-by-category />
+
+    <h1>Posts By Tag:</h1>
+    <display-by-tag />
+
+
+
+    <h1>All Tags</h1>
+
     <div v-for="tag in Tags">
       <nuxt-link class="card" :key="tag" :to="'/tags/'+tag">{{tag}}</nuxt-link>
     </div>
-    <h1>Categories</h1>
+    <h1>All Categories</h1>
+
     <div v-for="category in Categories">
       <nuxt-link class="card" :key="category" :to="'/categories/'+category">{{category}}</nuxt-link>
     </div>
@@ -21,7 +25,9 @@
 </template>
 
 <script>
-
+  import DisplayByCategory from '~/components/DisplayByCategory'
+  import DisplayByTag from '~/components/DisplayByTag'
+  import DisplayAllPosts from '~/components/DisplayAllPosts'
   export default {
     head() {
       return {
@@ -32,15 +38,14 @@
       store.dispatch('getPosts')
 
     },
+    components: {
+      DisplayByCategory,
+      DisplayByTag,
+      DisplayAllPosts
+    },
     computed: {
       Posts() {
         return this.$store.state.posts
-      },
-      Featured() {
-        return this.$store.state.featured
-      },
-      News() {
-        return this.$store.state.news
       },
       Tags() {
         return this.$store.state.tags

@@ -1,12 +1,12 @@
 <template>
     <div>
 
-        <display-content taxonomy="categories" />
+        <display-by-category display="list" />
     </div>
 </template>
 
 <script>
-    import DisplayContent from '~/components/DisplayContent'
+    import DisplayByCategory from '~/components/DisplayByCategory'
     export default {
         name: "Posts",
         mounted() {
@@ -14,7 +14,7 @@
         },
 
         components: {
-            DisplayContent
+            DisplayByCategory
         }
     }
 </script>

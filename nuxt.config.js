@@ -15,6 +15,7 @@ module.exports = {
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
+  modules: ["nuxt-vuex-router-sync"],
   generate: {
     routes: function(callback) {
       axios
@@ -42,7 +43,7 @@ module.exports = {
           let categoryRoutes = [];
           res.data.map(post => {
             if (post.attrs.category) {
-              categoryRoutes.push(`/category/${post.attrs.category}`);
+              categoryRoutes.push(`/categories/${post.attrs.category}`);
             }
           });
 
@@ -50,7 +51,7 @@ module.exports = {
             (x, y) => (x.includes(y) ? x : [...x, y]),
             []
           );
-
+          console.log(categoryRoutes);
           // merge all routes
           routes = [...postRoutes, ...tagRoutes, ...categoryRoutes];
           callback(null, routes);

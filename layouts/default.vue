@@ -2,9 +2,9 @@
   <div>
     <div style="background: #ccc; margin-bottom: 15px;">
       <nuxt-link to="/">Home</nuxt-link>&nbsp;|&nbsp;
-      <nuxt-link to="/posts">Posts</nuxt-link>&nbsp;|&nbsp;
-      <nuxt-link to="/categories">Categories</nuxt-link>&nbsp;|&nbsp;
-      <nuxt-link to="/tags">Tags</nuxt-link>&nbsp;|&nbsp;
+      <nuxt-link to="/posts">All Posts</nuxt-link>&nbsp;|&nbsp;
+      <nuxt-link to="/categories">Posts by Category</nuxt-link>&nbsp;|&nbsp;
+      <nuxt-link to="/tags">Posts by Tag</nuxt-link>&nbsp;|&nbsp;
 
     </div>
     <nuxt/>

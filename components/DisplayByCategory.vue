@@ -1,10 +1,9 @@
 <template>
     <div>
 
-
-        <div v-for="tag in filterArray">
-            <strong>{{tag}}</strong>
-            <div v-for="item in itemList[tag]">
+        <div v-for="category in filterArray">
+            <strong>{{category}}</strong>
+            <div v-for="item in itemList[category]">
                 <nuxt-link :key="item.slug" :to="'/posts/'+item.slug">
                     {{item.attrs.title}}
                 </nuxt-link>
@@ -13,16 +12,17 @@
 
 
 
+
     </div>
 </template>
 
 <script>
     export default {
-        name: 'DisplayByTag',
+        name: 'DisplayByCategory',
         mounted() {
-            this.itemList = this.$store.state.postsByTag
+            this.itemList = this.$store.state.postsByCategory
             if (!this.filter) {
-                this.filterArray = this.$store.state.tags
+                this.filterArray = this.$store.state.categories
             } else {
                 this.filterArray = this.filter.replace(/\s/g, '').split(',')
             }
@@ -30,7 +30,8 @@
         data() {
             return {
                 filterArray: [],
-                itemList: {}
+                itemList: {},
+                error: true
             }
         },
         props: ['filter', 'display'],
