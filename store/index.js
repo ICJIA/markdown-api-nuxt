@@ -82,6 +82,7 @@ const createStore = () => {
         this.state.posts.map(post => {
           if (post.attrs.tags) {
             if (_.includes(post.attrs.tags, tag)) {
+              let clone = Object.assign({}, post);
               data.push(post);
             }
           }
@@ -103,7 +104,9 @@ const createStore = () => {
             if (post.attrs.tags) {
               post.attrs.tags.map(t => {
                 if (t === tag) {
-                  tagObj[t].push(post);
+                  let clone = Object.assign({}, post);
+                  delete clone.body;
+                  tagObj[t].push(clone);
                 }
               });
             }
@@ -123,7 +126,9 @@ const createStore = () => {
         for (var category in categoryObj) {
           this.state.posts.map(function(post) {
             if (post.attrs.category === category) {
-              categoryObj[category].push(post);
+              let clone = Object.assign({}, post);
+              delete clone.body;
+              categoryObj[category].push(clone);
             }
           });
         }
