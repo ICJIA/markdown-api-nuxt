@@ -8,7 +8,7 @@
 <script>
     import DisplayAllPosts from '~/components/DisplayAllPosts'
     export default {
-        name: "Posts",
+        name: "posts",
         mounted() {
 
         },

@@ -1,6 +1,7 @@
 const { join } = require("path");
 const axios = require("axios");
 const _ = require("lodash");
+const nodeExternals = require("webpack-node-externals");
 
 module.exports = {
   /*
@@ -13,9 +14,23 @@ module.exports = {
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { hid: "description", name: "description", content: "Nuxt.js project" }
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
+    link: [
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      {
+        rel: "stylesheet",
+        href:
+          "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
+      }
+      // {
+      //   rel: "stylesheet",
+      //   href: "https://unpkg.com/vuetify/dist/vuetify.min.css"
+      // }
+    ]
   },
   modules: ["nuxt-vuex-router-sync"],
+  plugins: ["~/plugins/vuetify.js"],
+  css: ["~/assets/styles/app.styl"],
+  vendor: ["~/plugins/vuetify.js", "~/plugins/axios.js"],
   generate: {
     routes: function(callback) {
       axios
@@ -51,7 +66,7 @@ module.exports = {
             (x, y) => (x.includes(y) ? x : [...x, y]),
             []
           );
-          console.log(categoryRoutes);
+          //console.log(categoryRoutes);
           // merge all routes
           routes = [...postRoutes, ...tagRoutes, ...categoryRoutes];
           callback(null, routes);
@@ -64,6 +79,11 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    extractCSS: true
+    extractCSS: true,
+    extend(config, ctx) {
+      if (ctx.isServer) {
+        config.externals = [nodeExternals({ whitelist: [/^vuetify/] })];
+      }
+    }
   }
 };

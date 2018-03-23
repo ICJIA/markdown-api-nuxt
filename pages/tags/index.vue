@@ -1,19 +1,32 @@
 <template>
     <div>
+        {{tags}}
 
-        <display-by-tag />
+
     </div>
 </template>
 
 <script>
-    import DisplayByTag from '~/components/DisplayByTag'
+
     export default {
-        name: "Posts",
+        name: "tags",
         mounted() {
 
         },
-        components: {
-            DisplayByTag
+        fetch({ store, params }) {
+            store.dispatch('getTags')
+
+        },
+        computed: {
+            tags() {
+                return this.$store.state.tags
+            }
         }
     }
 </script>
+
+<style>
+    .list {
+        margin-bottom: 30px;
+    }
+</style>

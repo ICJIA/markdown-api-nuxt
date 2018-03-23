@@ -1,9 +1,9 @@
 <template>
     <div>
-
-        <h1 class="list">Posts categorized as: '{{$route.params.category}}'</h1>
+        {{categorizedPosts}}
+        <h1>Posts categorized as: '{{$route.params.category}}'</h1>
         <div v-for="post in categorizedPosts">
-            <nuxt-link class="card" :key="post.slug" :to="'/posts/'+post.slug">{{post.attrs.title}}</nuxt-link>
+            <nuxt-link :key="post.slug" :to="'/posts/'+post.slug">{{post.attrs.title}}</nuxt-link>
         </div>
 
 
@@ -25,12 +25,12 @@
 
         },
         fetch({ store, params }) {
-            store.dispatch('getCategorizedPosts', params.category)
+            store.dispatch('getPostsByCategory', params.category)
 
         },
         computed: {
             categorizedPosts() {
-                return this.$store.state.categorizedPosts
+                return this.$store.state.postsByCategory
             }
         }
     }

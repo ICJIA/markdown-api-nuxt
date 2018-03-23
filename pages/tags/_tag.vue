@@ -2,24 +2,27 @@
     <div>
 
         <h1 class="list">Posts tagged with: '{{$route.params.tag}}'</h1>
-        <!-- <div v-for="post in taggedPosts">
-            <nuxt-link class="card" :key="post.slug" :to="'/posts/'+post.slug">{{post.attrs.title}}</nuxt-link>
-        </div> -->
+        JSON: {{taggedPosts}}
 
-        <display-by-tag :filter="$route.params.tag" />
 
     </div>
 </template>
 
 <script>
-    import DisplayByTag from '~/components/DisplayByTag'
+
     export default {
-        name: "AllPostsOfTag",
+        name: "getPostsByTag",
         mounted() {
 
         },
-        components: {
-            DisplayByTag
+        fetch({ store, params }) {
+            store.dispatch('getPostsByTag', params.tag)
+
+        },
+        computed: {
+            taggedPosts() {
+                return this.$store.state.postsByTag
+            }
         }
     }
 </script>

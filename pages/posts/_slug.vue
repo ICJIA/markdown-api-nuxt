@@ -6,14 +6,14 @@
         </h1>
         <h3>Tags:</h3>
         <div v-for="tag in post.attrs.tags">
-            <nuxt-link class="card" :key="tag" :to="'/tags/'+tag">{{tag}}</nuxt-link>
+            <nuxt-link :key="tag" :to="'/tags/'+tag">{{tag}}</nuxt-link>
         </div>
 
         <h3>Category:</h3>
         <div v-if="post.attrs.category">
-            <nuxt-link class="card" :to="'/categories/'+post.attrs.category">{{post.attrs.category}}</nuxt-link>
+            <nuxt-link :to="'/categories/'+post.attrs.category">{{post.attrs.category}}</nuxt-link>
         </div>
-        <div class="content" v-html="post.body" style="margin-top: 15px"></div>
+        <div v-html="post.body" style="margin-top: 15px"></div>
 
     </div>
 </template>
@@ -40,7 +40,4 @@
 </script>
 
 <style>
-    .box {
-        border: 1px solid #ccc;
-    }
 </style>

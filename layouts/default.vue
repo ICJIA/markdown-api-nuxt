@@ -1,61 +1,63 @@
 <template>
-  <div>
-    <div style="background: #ccc; margin-bottom: 15px;">
-      <nuxt-link to="/">Home</nuxt-link>&nbsp;|&nbsp;
-      <nuxt-link to="/posts">All Posts</nuxt-link>&nbsp;|&nbsp;
-      <nuxt-link to="/categories">Posts by Category</nuxt-link>&nbsp;|&nbsp;
-      <nuxt-link to="/tags">Posts by Tag</nuxt-link>&nbsp;|&nbsp;
+  <v-app dark>
+    <v-toolbar fixed>
+      <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
 
-    </div>
-    <nuxt/>
-  </div>
+      <v-toolbar-title>
+        <nuxt-link to="/" class="toolbarTitle">Markdown-to-API Test</nuxt-link>
+      </v-toolbar-title>
+
+      <v-spacer></v-spacer>
+      <v-toolbar-items class="hidden-sm-and-down">
+        <v-btn flat nuxt to="/posts">All Posts</v-btn>
+        <v-btn flat nuxt to="/categories">Posts by Category</v-btn>
+        <v-btn flat nuxt to="/tags">Posts by Tag</v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+
+    <v-content style="margin-top: 70px">
+      <v-container>
+        <nuxt />
+      </v-container>
+    </v-content>
+
+  </v-app>
 </template>
 
+<script>
+  export default {
+    data() {
+      return {
+        clipped: false,
+        drawer: true,
+        fixed: false,
+        items: [
+          { icon: 'apps', title: 'Welcome', to: '/' },
+          { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
+        ],
+        miniVariant: false,
+        right: true,
+        rightDrawer: false,
+        title: 'Vuetify.js'
+      }
+    }
+  }
+</script>
+
 <style>
-  html {
-    font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-size: 16px;
-    word-spacing: 1px;
-    -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    box-sizing: border-box;
+  ol {
+    margin-left: 35px !important;
   }
 
-  *,
-  *:before,
-  *:after {
-    box-sizing: border-box;
-    margin: 0;
-  }
-
-  .button--green {
-    display: inline-block;
-    border-radius: 4px;
-    border: 1px solid #3b8070;
-    color: #3b8070;
+  .toolbarTitle {
     text-decoration: none;
-    padding: 10px 30px;
-  }
-
-  .button--green:hover {
     color: #fff;
-    background-color: #3b8070;
+    font-weight: 900;
   }
 
-  .button--grey {
-    display: inline-block;
-    border-radius: 4px;
-    border: 1px solid #35495e;
-    color: #35495e;
-    text-decoration: none;
-    padding: 10px 30px;
-    margin-left: 15px;
-  }
+  .toolbarTitle:hover {
 
-  .button--grey:hover {
-    color: #fff;
-    background-color: #35495e;
+    color: #ccc;
+
   }
 </style>

@@ -14,89 +14,71 @@ function slugifyPath(path) {
 const createStore = () => {
   return new Vuex.Store({
     state: {
-      menuIsActive: false,
       post: {},
       posts: [],
-      featured: [],
-      news: [],
-      tags: [],
-      taggedPosts: [],
-      categories: [],
-      categorizedPosts: [],
       postsByCategory: [],
-      postsByTag: []
+      postsByTag: [],
+      tags: [],
+      categories: [],
+      categoryArray: [],
+      tagArray: []
     },
 
     mutations: {
-      toggleMenuState(state) {
-        state.menuIsActive = !state.menuIsActive;
-      },
       setPosts: (state, posts) => {
         state.posts = posts;
       },
-
       setCurrentPost: (state, post) => {
         state.post = post;
-      },
-      setCategories: (state, categories) => {
-        state.categories = categories;
       },
       setPostsByCategory: (state, postsByCategory) => {
         state.postsByCategory = postsByCategory;
       },
-      setCategorizedPosts: (state, categorizedPosts) => {
-        state.categorizedPosts = categorizedPosts;
+      setPostsByTag: (state, postsByTag) => {
+        state.postsByTag = postsByTag;
       },
       setTags: (state, tags) => {
         state.tags = tags;
       },
-      setTaggedPosts: (state, taggedPosts) => {
-        state.taggedPosts = taggedPosts;
+      setCategories: (state, categories) => {
+        state.categories = categories;
       },
-      setPostsByTag: (state, postsByTag) => {
-        state.postsByTag = postsByTag;
+      setTagArray: (state, tagArray) => {
+        state.tagArray = tagArray;
+      },
+      setCategoryArray: (state, categoryArray) => {
+        state.categoryArray = categoryArray;
       }
     },
     actions: {
       async getPosts({ commit, dispatch }) {
         let { data } = await axios.get(`posts`);
         commit("setPosts", data);
-
-        dispatch("getTags");
-        dispatch("getCategories");
-        dispatch("getPostsByCategory");
-        dispatch("getPostsByTag");
       },
       async getPost({ commit, store }, slug) {
         let { data } = await axios.get(`posts/${slug}`);
         commit("setCurrentPost", data);
       },
 
-      getTaggedPosts({ commit, store }, tag) {
-        let postArray = [];
-        this.state.posts.map(post => {
-          if (post.attrs.tags) {
-            if (_.includes(post.attrs.tags, tag)) {
-              postArray.push(post);
-            }
-          }
-        });
-        commit("setTaggedPosts", postArray);
+      async getPostsByCategory({ commit, store }, category) {
+        let { data } = await axios.get(`categories/${category}`);
+        commit("setPostsByCategory", data);
       },
 
-      getCategorizedPosts({ commit, store }, category) {
-        let categoryArray = [];
-        this.state.posts.map(post => {
-          if (post.attrs.category) {
-            if (_.includes(post.attrs.category, category)) {
-              categoryArray.push(post);
-            }
-          }
-        });
-        commit("setCategorizedPosts", categoryArray);
+      async getPostsByTag({ commit, store }, tag) {
+        let { data } = await axios.get(`tags/${tag}`);
+        commit("setPostsByTag", data);
+      },
+      async getTags({ commit, dispatch }) {
+        let { data } = await axios.get(`tags`);
+        commit("setTags", data);
+      },
+      async getCategories({ commit, dispatch }) {
+        let { data } = await axios.get(`categories`);
+        commit("setCategories", data);
       },
 
-      getTags({ commit }) {
+      getTagArray({ commit }) {
         let tags = [];
         this.state.posts.map(function(post) {
           if (post.attrs.tags) {
@@ -106,14 +88,10 @@ const createStore = () => {
           }
         });
         tags = tags.reduce((x, y) => (x.includes(y) ? x : [...x, y]), []);
-        commit("setTags", tags);
+        commit("setTagArray", tags);
       },
-      getPostsByTag({ commit }) {
-        let tagArray = [];
-        let tmpObj = {};
-        commit("setPostsByTag", tmpObj);
-      },
-      getCategories({ commit }) {
+
+      getCategoryArray({ commit }) {
         let categories = [];
         this.state.posts.map(function(post) {
           if (post.attrs.category) {
@@ -124,54 +102,7 @@ const createStore = () => {
           (x, y) => (x.includes(y) ? x : [...x, y]),
           []
         );
-        commit("setCategories", categories);
-      },
-      getPostsByCategory({ commit }) {
-        let categoryArray = [];
-        let tmpObj = {};
-        this.state.categories.map(category => {
-          tmpObj[category] = [];
-          this.state.posts.map(post => {
-            if (post.attrs.category) {
-              if (category === post.attrs.category) {
-                let postObj = {};
-                let attrs = {};
-                attrs.title = post.attrs.title;
-                attrs.created = post.attrs.created;
-                attrs.updated = post.attrs.updated;
-                postObj.slug = post.slug;
-                postObj.attrs = attrs;
-                tmpObj[category].push(postObj);
-              }
-            }
-          });
-        });
-        commit("setPostsByCategory", tmpObj);
-      },
-      getPostsByTag({ commit }) {
-        let tagArray = [];
-        let tmpObj = {};
-        this.state.tags.map(tag => {
-          tmpObj[tag] = [];
-          this.state.posts.map(post => {
-            if (post.attrs.tags) {
-              post.attrs.tags.map(targetTag => {
-                if (tag === targetTag) {
-                  let postObj = {};
-                  let attrs = {};
-                  attrs.title = post.attrs.title;
-                  attrs.created = post.attrs.created;
-                  attrs.updated = post.attrs.updated;
-                  postObj.slug = post.slug;
-                  postObj.attrs = attrs;
-                  tmpObj[tag].push(postObj);
-                }
-              });
-            }
-          });
-        });
-
-        commit("setPostsByTag", tmpObj);
+        commit("setCategoryArray", categories);
       },
 
       // Load from server
@@ -180,25 +111,34 @@ const createStore = () => {
         if (process.server) {
           let { data } = await axios.get("posts");
           commit("setPosts", data);
-          dispatch("getTags");
-          dispatch("getCategories");
-          dispatch("getPostsByCategory");
-          dispatch("getPostsByTag");
         }
         if (process.server && params.slug) {
           let { data } = await axios.get(`posts/${params.slug}`);
           commit("setCurrentPost", data);
-          console.log("getCurrentPost from server");
+          console.log("set current post from server");
+        }
+        if (process.server && route.name === "categories") {
+          let { data } = await axios.get(`categories`);
+          commit("setCategories", data);
+          console.log("get categories from server", data);
         }
 
-        if (process.server && params.tag) {
-          dispatch("getTaggedPosts", params.tag);
-          console.log("getTaggedPosts from server");
+        if (process.server && route.name === "tags") {
+          let { data } = await axios.get(`tags`);
+          commit("setTags", data);
+          console.log("get tags from server");
         }
 
         if (process.server && params.category) {
-          dispatch("getCategorizedPosts", params.category);
-          console.log("getCategorizedPosts from server");
+          let { data } = await axios.get(`categories/${params.category}`);
+          commit("setPostsByCategory", data);
+          console.log("get single category from server");
+        }
+
+        if (process.server && params.tag) {
+          let { data } = await axios.get(`tags/${params.tag}`);
+          commit("setPostsByTag", data);
+          console.log("get single tag from server");
         }
       }
     }

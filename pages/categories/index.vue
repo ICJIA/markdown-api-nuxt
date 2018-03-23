@@ -1,20 +1,26 @@
 <template>
     <div>
+        {{categories}}
 
-        <display-by-category display="list" />
+
     </div>
 </template>
 
 <script>
-    import DisplayByCategory from '~/components/DisplayByCategory'
+
     export default {
-        name: "Posts",
+        name: "categories",
         mounted() {
 
         },
+        fetch({ store, params }) {
+            store.dispatch('getCategories')
 
-        components: {
-            DisplayByCategory
+        },
+        computed: {
+            categories() {
+                return this.$store.state.categories
+            }
         }
     }
 </script>
