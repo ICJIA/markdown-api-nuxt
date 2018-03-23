@@ -55,27 +55,79 @@ const createStore = () => {
         let { data } = await axios.get(`posts`);
         commit("setPosts", data);
       },
-      async getPost({ commit, store }, slug) {
-        let { data } = await axios.get(`posts/${slug}`);
-        commit("setCurrentPost", data);
+      getPost({ commit, store }, slug) {
+        //let { data } = await axios.get(`posts/${slug}`);
+        let data = this.state.posts.filter(function(post) {
+          if (post.slug === slug) {
+            return post;
+          }
+        });
+
+        commit("setCurrentPost", Object.assign({}, data[0]));
       },
 
-      async getPostsByCategory({ commit, store }, category) {
-        let { data } = await axios.get(`categories/${category}`);
+      getPostsByCategory({ commit, store }, category) {
+        //let { data } = await axios.get(`categories/${category}`);
+        let data = this.state.posts.filter(function(post) {
+          if (post.attrs.category === category) {
+            return post;
+          }
+        });
         commit("setPostsByCategory", data);
       },
 
-      async getPostsByTag({ commit, store }, tag) {
-        let { data } = await axios.get(`tags/${tag}`);
+      getPostsByTag({ commit, store }, tag) {
+        //let { data } = await axios.get(`tags/${tag}`);
+        let data = [];
+        this.state.posts.map(post => {
+          if (post.attrs.tags) {
+            if (_.includes(post.attrs.tags, tag)) {
+              data.push(post);
+            }
+          }
+        });
         commit("setPostsByTag", data);
       },
-      async getTags({ commit, dispatch }) {
-        let { data } = await axios.get(`tags`);
-        commit("setTags", data);
+      getTags({ commit, dispatch }) {
+        //let { data } = await axios.get(`tags`);
+        let tagObj = {};
+        this.state.posts.map(post => {
+          if (post.attrs.tags) {
+            post.attrs.tags.map(tag => {
+              tagObj[tag] = [];
+            });
+          }
+        });
+        for (var tag in tagObj) {
+          this.state.posts.map(post => {
+            if (post.attrs.tags) {
+              post.attrs.tags.map(t => {
+                if (t === tag) {
+                  tagObj[t].push(post);
+                }
+              });
+            }
+          });
+        }
+
+        commit("setTags", tagObj);
       },
-      async getCategories({ commit, dispatch }) {
-        let { data } = await axios.get(`categories`);
-        commit("setCategories", data);
+      getCategories({ commit, dispatch }) {
+        // let { data } = await axios.get(`categories`);
+        let categoryObj = {};
+        this.state.posts.map(function(post) {
+          if (post.attrs.category) {
+            categoryObj[post.attrs.category] = [];
+          }
+        });
+        for (var category in categoryObj) {
+          this.state.posts.map(function(post) {
+            if (post.attrs.category === category) {
+              categoryObj[category].push(post);
+            }
+          });
+        }
+        commit("setCategories", categoryObj);
       },
 
       getTagArray({ commit }) {
@@ -111,33 +163,36 @@ const createStore = () => {
         if (process.server) {
           let { data } = await axios.get("posts");
           commit("setPosts", data);
+          dispatch("getCategories");
+          dispatch("getTags");
         }
         if (process.server && params.slug) {
-          let { data } = await axios.get(`posts/${params.slug}`);
-          commit("setCurrentPost", data);
+          //let { data } = await axios.get(`posts/${params.slug}`);
+          //commit("setCurrentPost", data);
+          dispatch("getPostsByCategory", params.slug);
           console.log("set current post from server");
         }
         if (process.server && route.name === "categories") {
-          let { data } = await axios.get(`categories`);
-          commit("setCategories", data);
-          console.log("get categories from server", data);
+          //   let { data } = await axios.get(`categories`);
+          //   commit("setCategories", data);
+          // console.log("get categories from server", data);
         }
 
         if (process.server && route.name === "tags") {
-          let { data } = await axios.get(`tags`);
-          commit("setTags", data);
-          console.log("get tags from server");
+          //   let { data } = await axios.get(`tags`);
+          //   commit("setTags", data);
+          //   console.log("get tags from server");
         }
 
         if (process.server && params.category) {
-          let { data } = await axios.get(`categories/${params.category}`);
-          commit("setPostsByCategory", data);
+          //let { data } = await axios.get(`categories/${params.category}`);
+          dispatch("getPostsByCategory", params.category);
           console.log("get single category from server");
         }
 
         if (process.server && params.tag) {
-          let { data } = await axios.get(`tags/${params.tag}`);
-          commit("setPostsByTag", data);
+          //let { data } = await axios.get(`tags/${params.tag}`);
+          dispatch("getPostsByTag", params.tag);
           console.log("get single tag from server");
         }
       }

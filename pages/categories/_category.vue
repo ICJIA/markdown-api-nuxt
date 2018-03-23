@@ -1,6 +1,6 @@
 <template>
     <div>
-        {{categorizedPosts}}
+
         <h1>Posts categorized as: '{{$route.params.category}}'</h1>
         <div v-for="post in categorizedPosts">
             <nuxt-link :key="post.slug" :to="'/posts/'+post.slug">{{post.attrs.title}}</nuxt-link>

@@ -1,6 +1,8 @@
 <template>
     <div>
 
+
+
         <h1 class="title">
             {{post.attrs.title}}
         </h1>
@@ -10,9 +12,9 @@
         </div>
 
         <h3>Category:</h3>
-        <div v-if="post.attrs.category">
-            <nuxt-link :to="'/categories/'+post.attrs.category">{{post.attrs.category}}</nuxt-link>
-        </div>
+
+        <nuxt-link :to="'/categories/'+post.attrs.category">{{post.attrs.category}}</nuxt-link>
+
         <div v-html="post.body" style="margin-top: 15px"></div>
 
     </div>
